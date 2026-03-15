@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<form>
+    <field>
+        <id>redistribution.enabled</id>
+        <label>Enabled</label>
+        <type>checkbox</type>
+        <grid_view>
+            <width>6em</width>
+            <type>boolean</type>
+            <formatter>rowtoggle</formatter>
+        </grid_view>
+    </field>
+    <field>
+        <id>redistribution.protocol</id>
+        <label>Protocol</label>
+        <type>dropdown</type>
+        <help>Source routing protocol to redistribute into IS-IS.</help>
+    </field>
+    <field>
+        <id>redistribution.level</id>
+        <label>Level</label>
+        <type>dropdown</type>
+        <help>IS-IS level into which the redistributed routes are injected.</help>
+    </field>
+    <field>
+        <id>redistribution.metric</id>
+        <label>Metric</label>
+        <type>text</type>
+        <help>Optional metric to assign to redistributed routes. Leave empty to use the default metric.</help>
+        <grid_view>
+            <visible>false</visible>
+        </grid_view>
+    </field>
+    <field>
+        <id>redistribution.route_map</id>
+        <label>Route-Map</label>
+        <type>text</type>
+        <help>Optional route-map name to filter or modify redistributed routes. The route-map must be defined in FRR separately.</help>
+        <grid_view>
+            <visible>false</visible>
+        </grid_view>
+    </field>
+</form>

@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<model>
+    <mount>//OPNsense/quagga/isis</mount>
+    <description>IS-IS Routing configuration</description>
+    <version>1.0.0</version>
+    <items>
+        <!-- Global enable / daemon switch -->
+        <enabled type="BooleanField">
+            <Default>0</Default>
+            <Required>Y</Required>
+        </enabled>
+
+        <!-- IS-IS process / routing instance name (e.g. "1" or a word) -->
+        <process_tag type="TextField">
+            <Default>1</Default>
+            <Required>Y</Required>
+            <Mask>/^[a-zA-Z0-9_-]{1,20}$/</Mask>
+            <ValidationMessage>Process tag must be 1-20 alphanumeric characters.</ValidationMessage>
+        </process_tag>
+
+        <!-- NET address: xx.xxxx.xxxx.xxxx.xx -->
+        <net type="TextField">
+            <Mask>/^[0-9a-fA-F]{2}(\.[0-9a-fA-F]{4}){3,9}\.[0-9a-fA-F]{2}$/</Mask>
+            <ValidationMessage>NET must be in NSAP format, e.g. 49.0001.1921.6800.1001.00</ValidationMessage>
+        </net>
+
+        <!-- IS type: level-1, level-2-only, or level-1-2 -->
+        <is_type type="OptionField">
+            <Default>level-1-2</Default>
+            <Required>Y</Required>
+            <OptionValues>
+                <level-1>Level-1 only</level-1>
+                <level-2-only>Level-2 only</level-2-only>
+                <level-1-2>Level-1-2</level-1-2>
+            </OptionValues>
+        </is_type>
+
+        <!-- Log adjacency changes -->
+        <log_adj_changes type="BooleanField">
+            <Default>1</Default>
+            <Required>Y</Required>
+        </log_adj_changes>
+
+        <!-- Purge originator -->
+        <purge_originator type="BooleanField">
+            <Default>0</Default>
+            <Required>Y</Required>
+        </purge_originator>
+
+        <!-- default metric style: narrow / wide / transition -->
+        <metric_style type="OptionField">
+            <Default>wide</Default>
+            <Required>Y</Required>
+            <OptionValues>
+                <narrow>Narrow (classic TLV)</narrow>
+                <wide>Wide (extended TLV)</wide>
+                <transition>Transition (both)</transition>
+            </OptionValues>
+        </metric_style>
+
+        <!-- SPF interval (ms) -->
+        <spf_delay type="IntegerField">
+            <MinimumValue>0</MinimumValue>
+            <MaximumValue>60000</MaximumValue>
+            <ValidationMessage>SPF delay must be 0–60000 ms.</ValidationMessage>
+        </spf_delay>
+
+        <!-- Domain-wide authentication (area/domain password) -->
+        <auth_mode type="OptionField">
+            <Default></Default>
+            <OptionValues>
+                <md5>MD5</md5>
+                <clear>Cleartext</clear>
+            </OptionValues>
+        </auth_mode>
+
+        <auth_password type="TextField">
+            <Mask>/^.{0,64}$/</Mask>
+        </auth_password>
+
+        <!-- Redistribute into IS-IS -->
+        <redistributions>
+            <redistribution type="ArrayField">
+                <enabled type="BooleanField">
+                    <Default>1</Default>
+                    <Required>Y</Required>
+                </enabled>
+                <protocol type="OptionField">
+                    <Required>Y</Required>
+                    <OptionValues>
+                        <connected>Connected</connected>
+                        <static>Static</static>
+                        <ospf>OSPF</ospf>
+                        <bgp>BGP</bgp>
+                        <kernel>Kernel</kernel>
+                    </OptionValues>
+                </protocol>
+                <level type="OptionField">
+                    <Default>level-2</Default>
+                    <Required>Y</Required>
+                    <OptionValues>
+                        <level-1>Level-1</level-1>
+                        <level-2>Level-2</level-2>
+                    </OptionValues>
+                </level>
+                <metric type="IntegerField">
+                    <MinimumValue>0</MinimumValue>
+                    <MaximumValue>16777215</MaximumValue>
+                    <ValidationMessage>Metric must be 0–16777215.</ValidationMessage>
+                </metric>
+                <route_map type="TextField">
+                    <Mask>/^[a-zA-Z0-9_-]{0,64}$/</Mask>
+                </route_map>
+            </redistribution>
+        </redistributions>
+
+        <!-- Per-interface configuration -->
+        <interfaces>
+            <interface type="ArrayField">
+                <enabled type="BooleanField">
+                    <Default>1</Default>
+                    <Required>Y</Required>
+                </enabled>
+                <!-- OPNsense logical interface name -->
+                <interface type="InterfaceField">
+                    <Required>Y</Required>
+                    <Multiple>N</Multiple>
+                    <AllowDynamic>Y</AllowDynamic>
+                </interface>
+                <circuit_type type="OptionField">
+                    <Default>level-1-2</Default>
+                    <Required>Y</Required>
+                    <OptionValues>
+                        <level-1>Level-1</level-1>
+                        <level-2-only>Level-2</level-2-only>
+                        <level-1-2>Level-1-2</level-1-2>
+                    </OptionValues>
+                </circuit_type>
+                <passive type="BooleanField">
+                    <Default>0</Default>
+                    <Required>Y</Required>
+                </passive>
+                <!-- Wide metric (0 = not set) -->
+                <metric type="IntegerField">
+                    <MinimumValue>1</MinimumValue>
+                    <MaximumValue>16777215</MaximumValue>
+                    <ValidationMessage>Metric must be 1–16777215.</ValidationMessage>
+                </metric>
+                <hello_interval type="IntegerField">
+                    <MinimumValue>1</MinimumValue>
+                    <MaximumValue>600</MaximumValue>
+                    <ValidationMessage>Hello interval must be 1–600 seconds.</ValidationMessage>
+                </hello_interval>
+                <hello_multiplier type="IntegerField">
+                    <MinimumValue>2</MinimumValue>
+                    <MaximumValue>100</MaximumValue>
+                    <ValidationMessage>Hold-time multiplier must be 2–100.</ValidationMessage>
+                </hello_multiplier>
+                <!-- Network type: broadcast or point-to-point -->
+                <network_type type="OptionField">
+                    <Default></Default>
+                    <OptionValues>
+                        <point-to-point>Point-to-Point</point-to-point>
+                        <broadcast>Broadcast</broadcast>
+                    </OptionValues>
+                </network_type>
+                <!-- Interface-level authentication -->
+                <auth_mode type="OptionField">
+                    <Default></Default>
+                    <OptionValues>
+                        <md5>MD5</md5>
+                        <clear>Cleartext</clear>
+                    </OptionValues>
+                </auth_mode>
+                <auth_password type="TextField">
+                    <Mask>/^.{0,64}$/</Mask>
+                </auth_password>
+            </interface>
+        </interfaces>
+
+    </items>
+</model>

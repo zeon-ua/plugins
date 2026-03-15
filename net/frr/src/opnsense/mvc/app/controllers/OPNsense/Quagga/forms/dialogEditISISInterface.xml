@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<form>
+    <field>
+        <id>interface.enabled</id>
+        <label>Enabled</label>
+        <type>checkbox</type>
+        <help>Enable IS-IS on this interface.</help>
+        <grid_view>
+            <width>6em</width>
+            <type>boolean</type>
+            <formatter>rowtoggle</formatter>
+        </grid_view>
+    </field>
+    <field>
+        <id>interface.interface</id>
+        <label>Interface</label>
+        <type>dropdown</type>
+        <help>OPNsense interface to enable IS-IS on.</help>
+    </field>
+    <field>
+        <id>interface.circuit_type</id>
+        <label>Circuit Type</label>
+        <type>dropdown</type>
+        <help>IS-IS level participation for this interface. Overrides the global IS type for this circuit.</help>
+    </field>
+    <field>
+        <id>interface.network_type</id>
+        <label>Network Type</label>
+        <type>dropdown</type>
+        <help>Force interface network type. Use Point-to-Point on links where DIS election is undesired (e.g. p2p WAN links). Leave empty for auto-detection.</help>
+    </field>
+    <field>
+        <id>interface.passive</id>
+        <label>Passive</label>
+        <type>checkbox</type>
+        <help>Suppress IS-IS hello packets on this interface. The interface prefix is still advertised into IS-IS.</help>
+        <grid_view>
+            <type>boolean</type>
+            <formatter>boolean</formatter>
+            <visible>false</visible>
+        </grid_view>
+    </field>
+    <field>
+        <id>interface.metric</id>
+        <label>Metric</label>
+        <type>text</type>
+        <help>Interface metric (cost). Wide range: 1–16777215. Leave empty to use the FRR default (10).</help>
+    </field>
+    <field>
+        <id>interface.hello_interval</id>
+        <label>Hello Interval (s)</label>
+        <type>text</type>
+        <help>Interval in seconds between IS-IS hello PDUs. Default is 3 seconds for point-to-point, 10 for broadcast.</help>
+        <grid_view>
+            <visible>false</visible>
+        </grid_view>
+    </field>
+    <field>
+        <id>interface.hello_multiplier</id>
+        <label>Hello Multiplier</label>
+        <type>text</type>
+        <help>Number of missed hellos before adjacency is declared down. Hold time = hello_interval × hello_multiplier. Default is 10.</help>
+        <grid_view>
+            <visible>false</visible>
+        </grid_view>
+    </field>
+    <field>
+        <id>interface.auth_mode</id>
+        <label>Auth Mode</label>
+        <type>dropdown</type>
+        <help>Interface-level authentication mode. Leave empty to inherit domain setting or disable.</help>
+        <grid_view>
+            <visible>false</visible>
+        </grid_view>
+    </field>
+    <field>
+        <id>interface.auth_password</id>
+        <label>Auth Password</label>
+        <type>text</type>
+        <help>Interface authentication password.</help>
+        <grid_view>
+            <visible>false</visible>
+        </grid_view>
+    </field>
+</form>
